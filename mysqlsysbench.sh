@@ -10,9 +10,9 @@ MYUSER=""
 MYPASS=""
 MYSOCKET="/var/run/mysqld/mysqld.sock"
 THREADS="1 2 4 8 12 16 24 32 48 64"
-ROWS=100000
+ROWS=10000000
 MAXROWS=${ROWS}0
-REQUESTS=10000
+REQUESTS=100000
 ELEVATORS="cfq deadline noop"
 DEF_ELEVATOR="cfq"
 FILTER="Number of threads|transactions:|deadlocks:|read\/write requests|total time:"
@@ -23,39 +23,67 @@ DEV=sda
 prepare_table ()
 {
 
-sysbench --test=oltp --mysql-table-engine=$ENGINE --oltp-table-size=$ROWS \
---mysql-user=$MYUSER --mysql-password=$MYPASS \
---mysql-socket=$MYSOCKET --init-rng=1 --num-threads=1 --max-requests=$REQUESTS \
---myisam-max-rows=$MAXROWS \
---oltp-read-only --oltp-dist-type=uniform prepare
+sysbench --test=oltp \
+    --init-rng=1 \
+    --num-threads=1 \
+    --mysql-table-engine=$ENGINE \
+    --oltp-table-size=$ROWS \
+    --mysql-user=$MYUSER \
+    --mysql-password=$MYPASS \
+    --mysql-socket=$MYSOCKET \
+    --max-requests=$REQUESTS \
+    --myisam-max-rows=$MAXROWS \
+    --oltp-read-only \
+    --oltp-dist-type=uniform prepare
 
 }
 
 cleanup_table () 
 {
 
-sysbench --test=oltp --mysql-table-engine=$ENGINE --oltp-table-size=$ROWS \
---mysql-user=$MYUSER --mysql-password=$MYPASS \
---mysql-socket=$MYSOCKET --init-rng=1 --num-threads=1 --max-requests=$REQUESTS \
---oltp-read-only --oltp-dist-type=uniform cleanup
+sysbench --test=oltp \
+    --init-rng=1 \
+    --num-threads=1 \
+    --mysql-table-engine=$ENGINE \
+    --oltp-table-size=$ROWS \
+    --mysql-user=$MYUSER \
+    --mysql-password=$MYPASS \
+    --mysql-socket=$MYSOCKET \
+    --max-requests=$REQUESTS \
+    --oltp-read-only \
+    --oltp-dist-type=uniform cleanup
 
 }
 
 bench_rw ()
 {
 
-sysbench --test=oltp --oltp-table-size=$ROWS --mysql-user=$MYUSER --mysql-password=$MYPASS \
---mysql-socket=$MYSOCKET --init-rng=1 --num-threads=$COUNT --max-requests=$REQUESTS \
---oltp-read-only=off --oltp-dist-type=uniform run | $EGREP "$FILTER"
+sysbench --test=oltp \
+    --init-rng=1 \
+    --num-threads=$COUNT \
+    --oltp-table-size=$ROWS \
+    --mysql-user=$MYUSER \
+    --mysql-password=$MYPASS \
+    --mysql-socket=$MYSOCKET \
+    --max-requests=$REQUESTS \
+    --oltp-read-only=off \
+    --oltp-dist-type=uniform run | $EGREP "$FILTER"
 
 }
 
 bench_ro ()
 {
 
-sysbench --test=oltp --oltp-table-size=$ROWS --mysql-user=$MYUSER --mysql-password=$MYPASS \
---mysql-socket=$MYSOCKET --init-rng=1 --num-threads=$COUNT --max-requests=$REQUESTS \
---oltp-read-only --oltp-dist-type=uniform run | $EGREP "$FILTER"
+sysbench --test=oltp \
+    --init-rng=1 \
+    --num-threads=$COUNT \
+    --oltp-table-size=$ROWS \
+    --mysql-user=$MYUSER \
+    --mysql-password=$MYPASS \
+    --mysql-socket=$MYSOCKET \
+    --max-requests=$REQUESTS \
+    --oltp-read-only \
+    --oltp-dist-type=uniform run | $EGREP "$FILTER"
 
 }
 

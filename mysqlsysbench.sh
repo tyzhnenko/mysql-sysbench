@@ -135,7 +135,7 @@ for ELEVATOR in $ELEVATORS; do
     rw_threads_test
 done
 echo "Set to default elevator - $DEF_ELEVATOR"
-ELEVATOR = $DEF_ELEVATOR
+ELEVATOR=$DEF_ELEVATOR
 change_elevator
 echo "# Finish elevators read write test"
 }
@@ -149,7 +149,7 @@ for ELEVATOR in $ELEVATORS; do
     rw_threads_test
 done
 echo "Set to default elevator - $DEF_ELEVATOR"
-ELEVATOR = $DEF_ELEVATOR
+ELEVATOR=$DEF_ELEVATOR
 change_elevator
 echo "# Finish elevators read only and read write test"
 }

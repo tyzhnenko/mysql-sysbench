@@ -186,12 +186,12 @@ case "$1" in
     echo "## Start prepare InnoDB tables"
     ENGINE=innodb
     prepare_table
-    echo "## Finish cleanup InnoDB tables"
+    echo "## Finish prepare InnoDB tables"
 
 ;;
 --innodb-cleanup)
     
-    echo "## Start prepare InnoDB tables"
+    echo "## Start cleanup InnoDB tables"
     ENGINE=innodb
     cleanup_table
     echo "## Finish cleanup InnoDB tables"
